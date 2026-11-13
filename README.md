@@ -36,6 +36,18 @@ npm run check
 
 Tests cover the 17 assistant phrases, catalog matching, outfit budgets, cart variants and stock, coupons, totals, wishlist and unavailable-storage handling. Checks validate JavaScript syntax, JSON parsing, local image files and static links. Browser QA covers the complete text-assistant shopping journey and demo checkout.
 
+## Under the hood
+
+No framework and no backend — the whole app is hand-built static files orchestrated by `dist/js/app.js`:
+
+- **Data layer** (`dist/js/products.js`) — loads the catalog from `dist/data/*.json`; filtering by category, gender, size, fit, color, material, rating and price, full-text search, and five sort orders.
+- **Cart & state** (`dist/js/cart.js`) — cart in `localStorage` (`velora-cart`), stock validation before every add, coupon rules (e.g. NEXTMOVE, WELCOME15), free shipping at $150+, totals recalculated instantly.
+- **Assistant** (`dist/js/voice-agent.js` + `dist/js/intent-engine.js`) — typed or spoken requests parsed into intent + entities: search, filter, build an outfit, add to cart, policy answers. Browser speech only — no remote AI.
+- **Outfit builder** (`dist/js/recommendations.js`) — matches top + bottom + shoes + accessory by category, color, gender and budget; returns a message rather than a broken set when nothing fits.
+- **Pages** — home, shop, product, cart, checkout, wishlist, outfit builder (`look.html`), about and service, all rendered from the one orchestrator with centralized event delegation.
+
+📐 **Full technical walkthrough:** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — module-by-module architecture, checkout and state details, QA coverage and limitations.
+
 ## Structure
 
 | Path | Contents |
